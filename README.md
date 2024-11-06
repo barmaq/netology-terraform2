@@ -108,6 +108,12 @@ local.test_map.admin
     default = "${local.test_map.admin} is admin for ${length(local.servers)} ${local.test_list[2]} server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks"
   }
 
+---------------------------------------------------  
+---------------------------------------------------  
+Задание 8 
+ Напишите выражение в terraform console, которое позволит вычленить строку "ssh -o 'StrictHostKeyChecking=no' ubuntu@62.84.124.117" из  переменной. 
+  
+local.test[0]["dev1"][0]  
 
 
 
