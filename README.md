@@ -86,6 +86,27 @@ No changes. Your infrastructure matches the configuration.
 [main.tf](src/main.tf)  
 
 
+---------------------------------------------------  
+---------------------------------------------------  
+Задание 7  
+  
+Изучите содержимое файла console.tf. Откройте terraform console, выполните следующие задания:  
+
+Напишите, какой командой можно отобразить второй элемент списка test_list.
+Найдите длину списка test_list с помощью функции length(<имя переменной>).
+Напишите, какой командой можно отобразить значение ключа admin из map test_map.
+Напишите interpolation-выражение, результатом которого будет: 
+"John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks", 
+используйте данные из переменных test_list, test_map, servers и функцию length() для подстановки значений.
+
+  
+local.test_list[1]  
+length(local.test_list)  
+local.test_map.admin  
+
+  result = {
+    default = "${local.test_map.admin} is admin for ${length(local.servers)} ${local.test_list[2]} server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks"
+  }
 
 
 
