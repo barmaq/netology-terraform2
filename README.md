@@ -37,15 +37,15 @@ https://yandex.cloud/ru/docs/compute/concepts/preemptible-vm
 
 Задание 2
 Замените все хардкод-значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.
-Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.
+Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.  
 [variables.tf](src/variables.tf)  
 [main.tf](src/main.tf)  
 
-меняем, подставляем соответсвующе значения в main.tf
+меняем, подставляем соответсвующе значения в main.tf  
 проверяем
 
-terraform plan
-No changes. Your infrastructure matches the configuration.
+terraform plan  
+No changes. Your infrastructure matches the configuration.  
 
 ---------------------------------------------------  
 ---------------------------------------------------  
@@ -53,16 +53,16 @@ No changes. Your infrastructure matches the configuration.
 Задание 3
 Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.
 Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: "netology-develop-platform-db" , cores  = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом vm_db_ в том же файле ('vms_platform.tf'). ВМ должна работать в зоне "ru-central1-b"
-Примените изменения.
-[vms_platform.tf](src/vms_platform.tf)
+Примените изменения.  
+[vms_platform.tf](src/vms_platform.tf)  
 
 ---------------------------------------------------  
 ---------------------------------------------------  
 
 Задание 4
 Объявите в файле outputs.tf один output , содержащий: instance_name, external_ip, fqdn для каждой из ВМ в удобном лично для вас формате.(без хардкода!!!)
-Примените изменения.
-[outputs.tf](src/outputs.tf)
+Примените изменения.  
+[outputs.tf](src/outputs.tf)  
 
 ---------------------------------------------------  
 ---------------------------------------------------  
@@ -70,7 +70,7 @@ No changes. Your infrastructure matches the configuration.
 Задание 5
 В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с НЕСКОЛЬКИМИ переменными по примеру из лекции.
 Замените переменные внутри ресурса ВМ на созданные вами local-переменные.
-Примените изменения.  
+Примените изменения.   
 
 [locals.tf](src/locals.tf)
 
@@ -80,8 +80,8 @@ No changes. Your infrastructure matches the configuration.
 
 Вместо использования трёх переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедините их в единую map-переменную vms_resources и внутри неё конфиги обеих ВМ
 в виде вложенного map(object).
-Создайте и используйте отдельную map(object) переменную для блока metadata, она должна быть общая для всех ваших ВМ.
-
+Создайте и используйте отдельную map(object) переменную для блока metadata, она должна быть общая для всех ваших ВМ.  
+  
 [variables.tf](src/variables.tf)  
 [main.tf](src/main.tf)  
 
