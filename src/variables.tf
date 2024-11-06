@@ -35,13 +35,13 @@ variable "vpc_name" {
 
 variable "vms_ssh_root_key" {
   type        = string
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK4DFQBsJA/Djtas+6WVht6qyVPLgia0JVBjEmNrnmdL barmaq for yacloud"
+  default     = "****"
   description = "ssh-keygen -t ed25519"
 }
 
 variable "vms_ssh_public_root_key" {
   type        = string
-  default     = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyMJezE+Yc+NjyJOkIi+a\nrjxm6+CSbry6Sb2zHiDNhAALX663UDuH1qVKiivvSDvalfn0yr2PZ7/YUkAI/14l\nJ0hC6ZaVulSX5dcU3l97e98BR6vzdT5w14JJwtnRDIwMzcVBytC8sxylqzHvHgLO\nMQsaXYMlxmuCoXNgANAYkwPb3lnE/JWMu+y44HBqUoP700oSxWjJKHWpiHM3nvFn\n1bofJYTyaZCbaWqgaxeITjHXIrspwOl9Bm27p89VbBKcYa6J96mB4T2mEGgSrARy\nBCLG4cpPUGgVLZ3qleRjrtaM62KiJmyuZFKQEqbUAxFvg/o1+y4IYVs7ewyrBLDo\nEwIDAQAB\n-----END PUBLIC KEY-----\n"
+  default     = "***"
   description = "ssh-key RSA_2048"
 }
 
@@ -130,7 +130,7 @@ variable "metadata" {
   default = {
     "standart" = {
 		serial-port-enable         = 1
-		ssh-keys                   = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK4DFQBsJA/Djtas+6WVht6qyVPLgia0JVBjEmNrnmdL barmaq for yacloud"
+		ssh-keys                   = "***"
     }
   }
 }
