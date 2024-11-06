@@ -1,11 +1,10 @@
---------------------  
---------------------  
-журнал выполненных работ
-[Журнал](путь/к/файлу)
+Журнал работ
 
 
 
-------------
+Задание 1:
+Исправьте намеренно допущенные синтаксические ошибки. Ищите внимательно, посимвольно. Ответьте, в чём заключается их суть.
+
 ошибки
 
 в main.tf 
@@ -25,257 +24,23 @@ core fraction поменял на поддерживаемый -
 количество ядер 
   cores         = 2
 
-------------
-запускаем службу и добавляем приватный ключ
-sudo eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/ycbarmaq.rsa
 
-подключаемся
-ssh ubuntu@89.169.152.156
-curl ifconfig.me
-89.169.152.156
+Ответьте, как в процессе обучения могут пригодиться параметры preemptible = true и core_fraction=5 в параметрах ВМ.:  
 
-----------
-Ответьте, как в процессе обучения могут пригодиться параметры preemptible = true и core_fraction=5 в параметрах ВМ.:
 эти параметры означают что виртуальная машина имеет тип "временная" и приоритет доступа к процессору ( уровень его производительности )
 подробнее про верменные виртуалки тут. не предназначены для жизни более чем на 24 часа
 https://yandex.cloud/ru/docs/compute/concepts/preemptible-vm
 
 ---------------------------------------------------
 ---------------------------------------------------
+
 Задание 2
 Замените все хардкод-значения для ресурсов yandex_compute_image и yandex_compute_instance на отдельные переменные. К названиям переменных ВМ добавьте в начало префикс vm_web_ . Пример: vm_web_name.
 Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их default прежними значениями из main.tf.
-Проверьте terraform plan. Изменений быть не должно.
-
-в нашем случае это переменные :
-family = "ubuntu-2004-lts"
-platform_id = "standard-v3"
-cores         = 2
-memory        = 1
-core_fraction = 20
-name        = "netology-develop-platform-web"
-serial-port-enable = 1
-preemptible = true
-nat       = true
-
-прописываем переменные в variables.tf
-
- variable "vm_web_name" {
-   type        = string
-   default     = "netology-develop-platform-web"
-   description = "name for VM"
-}
-
-и т д
-
-vm_web_image_family
-vm_web_name
-vm_web_platform_id
-vm_web_cores
-vm_web_memory
-vm_web_core_fraction
-vm_web_preemptible
-vm_web_nat
-vm_web_sport_enable
+[variables.tf](src/variables.tf)
+[main.tf](src/main.tf)
 
 
 
-проверяем
-terraform console
-var.vm_web_name
 
 
-------------------------
-альтернатива
-удобнее показанным лектором же типом list или с помощью map, но там придется делать перевод в числа в некоторых значениях
-делаем через list
-
-variable "vm_web" {
-  type = list(object({
-    image_family    = string
-	name            = string
-    platform_id     = string
-    cores           = number
-    memory          = number
-    core_fraction   = number
-    preemptible     = bool
-    nat             = bool
-    sport_enable    = number
-  }))
-  default = [
-    {
-		image_family    = "ubuntu-2004-lts"
-		platform_id     = "standard-v3"
-		name            = "netology-develop-platform-web"
-		cores           = "2"
-		memory          = "1"
-		core_fraction   = "20"
-        preemptible     = "true"
-        nat             = "true"
-		sport_enable    = "1"
-    }
-  ]
-}
-
-
-
-проверяем
-terraform console
-var.vm_web
-var.vm_web[0].cores
-------------------------
-
-
-меняем, подставляем соответсвующе значения в main.tf
-проверяем
-
-terraform plan
-No changes. Your infrastructure matches the configuration.
-
-
----------------------------------------------------
----------------------------------------------------
-
-Задание 3
-Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.
-Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: "netology-develop-platform-db" , cores  = 2, memory = 2, core_fraction = 20. Объявите её переменные с префиксом vm_db_ в том же файле ('vms_platform.tf'). ВМ должна работать в зоне "ru-central1-b"
-Примените изменения.
-
-#ну тут опять же удобнее было бы добавить еще один элемент в список List но делаем как попросили
-
-cp variables.tf vms_platform.tf
-меняем переменные соответсвенно, удаляем дубликаты. добавляем перменные для имени и подсети
-
----------------------------------------------------
----------------------------------------------------
-Задание 4
-Объявите в файле outputs.tf один output , содержащий: instance_name, external_ip, fqdn для каждой из ВМ в удобном лично для вас формате.(без хардкода!!!)
-Примените изменения.
-
-для удобства идем в terraform console или terraform.tfstate
-смотрим содержимое 
-yandex_compute_instance.platform
-и
-yandex_compute_instance.db
-
-ключи
-yandex_compute_instance.db.name
-yandex_compute_instance.db.fqdn
-yandex_compute_instance.db.network_interface.0.nat_ip_address
-и
-yandex_compute_instance.platform.name
-yandex_compute_instance.platform.fqdn
-yandex_compute_instance.platform.network_interface.0.nat_ip_address
-
-делаем блок outputs
-
-output "info" {
-  value = {
-    platform = {
-      instance_name = yandex_compute_instance.platform.name
-      fqdn          = yandex_compute_instance.platform.fqdn
-      nat_ip        = yandex_compute_instance.platform.network_interface.0.nat_ip_address
-    }
-    db = {
-      instance_name = yandex_compute_instance.db.name
-      fqdn          = yandex_compute_instance.db.fqdn
-      nat_ip        = yandex_compute_instance.db.network_interface.0.nat_ip_address
-    }
-  }
-  description = "instance_name, fqdn и nat_ip_address для каждого экземпляра"
-}
-
----------------------------------------------------
----------------------------------------------------
-
-Задание 5
-В файле locals.tf опишите в одном local-блоке имя каждой ВМ, используйте интерполяцию ${..} с НЕСКОЛЬКИМИ переменными по примеру из лекции.
-Замените переменные внутри ресурса ВМ на созданные вами local-переменные.
-Примените изменения.
-
-locals {
- platform_name = "netology-${ var.vm_db_zone }–${ var.vm_db_name }"
- db_name = "netology-${ var.default_zone }–${ var.vm_web_name }"
-}
-
-
-в ресурсы yandex_compute_instance добавляем вместо значения поля name
-  name        = local.platform_name
-  name        = local.db_name
- 
-Обращение к local-переменной в консоли :
-local.<Имя Переменной>
-
-делаем apply.получаем output  с правильными именами
-Outputs:
-
-info = {
-  "db" = {
-    "fqdn" = "db.ru-central1.internal"
-    "instance_name" = "netology-ru-central1-a-platform-web"
-    "nat_ip" = "158.160.16.131"
-  }
-  "platform" = {
-    "fqdn" = "develop.ru-central1.internal"
-    "instance_name" = "netology-ru-central1-b-db"
-    "nat_ip" = "89.169.151.79"
-  }
-}
-
----------------------------------------------------
----------------------------------------------------
-Задание 6
-
-Вместо использования трёх переменных ".._cores",".._memory",".._core_fraction" в блоке resources {...}, объедините их в единую map-переменную vms_resources и внутри неё конфиги обеих ВМ
-в виде вложенного map(object).
-
-создал 
-variable "vms_resources" {
-  type = map(object({
-    cores         = number
-    memory        = number
-	  core_fraction = number
-  }))
-  default = {
-    "web" = {
-		cores         = 2
-		memory        = 1
-		core_fraction = 20
-    },
-    "db" = {
-		cores         = 2
-		memory        = 2
-		core_fraction = 20
-    }
-  }
-}
-
-проверить можно в консоли 
-var.vms_resources.web.memory
-
-
-Создайте и используйте отдельную map(object) переменную для блока metadata, она должна быть общая для всех ваших ВМ.
-
-
-variable "metadata" {
-  type = map(object({
-    serial-port-enable         = number
-    ssh-keys                     = string
-  }))
-  default = {
-    "standart" = {
-		serial-port-enable         = 1
-		ssh-keys                     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK4DFQBsJA/Djtas+6WVht6qyVPLgia0JVBjEmNrnmdL barmaq for yacloud"
-    }
-  }
-}
-
-проверка
-var.metadata.standart.ssh-keys
-
-Найдите и закоментируйте все, более не используемые переменные проекта.
-
-Проверьте terraform plan. Изменений быть не должно.
-terraform plan
-No changes. Your infrastructure matches the configuration.
