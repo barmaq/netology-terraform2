@@ -28,5 +28,8 @@ locals {
       disks = ["vda", "vdb", "vdc", "vdd"]
     }
   }
+  result = {
+    default = "${local.test_map.admin} is admin for ${length(local.servers)} ${local.test_list[2]} server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks"
+  }
 }
 
